@@ -77,34 +77,34 @@ const requireAuth = (req, res, next) => {
 
 // GET /register
 app.get('/register', (req, res) => {
-    res.render('register', { title: "Register - TaskStore" });
+    res.render('register', { title: "Register - E-Commerce" });
 });
 
 // POST /register
 app.post('/register', async (req, res) => {
     const { username, email, password } = req.body;
     if (!username || !email || !password) {
-        return res.render('register', { title: "Register - TaskStore", error: "All fields are required." });
+        return res.render('register', { title: "Register - E-Commerce", error: "All fields are required." });
     }
     try {
         const hashedPassword = await bcrypt.hash(password, 12);
         await db.run('INSERT INTO users (username, email, password) VALUES (?, ?, ?)', [username, email, hashedPassword]);
         res.redirect('/login');
     } catch (error) {
-        res.render('register', { title: "Register - TaskStore", error: "Username or email already exists." });
+        res.render('register', { title: "Register - E-Commerce", error: "Username or email already exists." });
     }
 });
 
 // GET /login
 app.get('/login', (req, res) => {
-    res.render('login', { title: "Login - TaskStore" });
+    res.render('login', { title: "Login - E-Commerce" });
 });
 
 // POST /login
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     if (!username || !password) {
-        return res.render('login', { title: "Login - TaskStore", error: "Username and password are required." });
+        return res.render('login', { title: "Login - E-Commerce", error: "Username and password are required." });
     }
     const user = await db.get('SELECT * FROM users WHERE username = ?', [username]);
     if (user && await bcrypt.compare(password, user.password)) {
@@ -115,7 +115,7 @@ app.post('/login', async (req, res) => {
             res.redirect('/');
         });
     } else {
-        res.render('login', { title: "Login - TaskStore", error: "Invalid username or password." });
+        res.render('login', { title: "Login - E-Commerce", error: "Invalid username or password." });
     }
 });
 
@@ -145,8 +145,8 @@ app.get('/', async (req, res) => {
 app.get('/product/:id', async (req, res) => {
     try {
         const product = await db.get('SELECT * FROM products WHERE id = ?', [req.params.id]);
-        if (!product) return res.status(404).render('404', { title: "Not Found - TaskStore" });
-        res.render('product', { product, title: `${product.name} - TaskStore` });
+        if (!product) return res.status(404).render('404', { title: "Not Found - E-Commerce" });
+        res.render('product', { product, title: `${product.name} - E-Commerce` });
     } catch (err) {
         res.status(500).send('Error loading product.');
     }
@@ -165,7 +165,7 @@ app.get('/cart', async (req, res) => {
                 total += product.price * item.quantity;
             }
         }
-        res.render('cart', { cartItems: populatedCart, total, title: "Shopping Cart - TaskStore" });
+        res.render('cart', { cartItems: populatedCart, total, title: "Shopping Cart - E-Commerce" });
     } catch (err) {
         res.status(500).send('Error loading cart.');
     }
