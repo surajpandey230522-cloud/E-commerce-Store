@@ -1,7 +1,9 @@
 require('dotenv').config();
 const { Pool } = require('pg');
-const sqlite3 = require('sqlite3').verbose();
-const { open } = require('sqlite');
+// NOTE: sqlite3 and sqlite are intentionally NOT required here at the top.
+// They are lazily required inside setupSQLite() only when PostgreSQL is
+// unavailable. This prevents the GLIBC native-binding crash on Render when
+// a DATABASE_URL is provided and SQLite is never needed.
 
 // ─────────────────────────────────────────────
 //  Placeholder converter: SQLite's ?  →  PG's $1, $2, ...
@@ -132,6 +134,9 @@ async function setupPostgres(connectionString) {
 // ─────────────────────────────────────────────
 async function setupSQLite() {
     console.log("→ Using SQLite (fallback)...");
+    // Lazy-load: only imported if PostgreSQL is not available
+    const sqlite3 = require('sqlite3').verbose();
+    const { open } = require('sqlite');
     const sqliteDb = await open({
         filename: process.env.DB_PATH || './database.sqlite',
         driver: sqlite3.Database
