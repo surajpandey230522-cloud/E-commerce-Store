@@ -105,17 +105,29 @@ async function setupPostgres(connectionString) {
         console.log("✓ PostgreSQL seeded with initial products.");
     }
 
+    // PostgreSQL returns NUMERIC columns as strings. This converts them back
+    // to JS numbers so .toFixed() and arithmetic work correctly everywhere.
+    const NUMERIC_FIELDS = ['price', 'total'];
+    function parseRow(row) {
+        if (!row) return null;
+        const out = { ...row };
+        for (const field of NUMERIC_FIELDS) {
+            if (out[field] !== undefined) out[field] = parseFloat(out[field]);
+        }
+        return out;
+    }
+
     // Build a unified adapter object with SQLite-compatible API
     return {
         type: 'postgres',
         pool,
         async get(sql, params = []) {
             const { rows } = await pool.query(toPgPlaceholders(sql), params);
-            return rows[0] || null;
+            return parseRow(rows[0]) || null;
         },
         async all(sql, params = []) {
             const { rows } = await pool.query(toPgPlaceholders(sql), params);
-            return rows;
+            return rows.map(parseRow);
         },
         async run(sql, params = []) {
             // Append RETURNING id so we can expose lastID
@@ -128,6 +140,7 @@ async function setupPostgres(connectionString) {
         }
     };
 }
+
 
 // ─────────────────────────────────────────────
 //  SQLite Adapter
