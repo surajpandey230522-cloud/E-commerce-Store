@@ -1,0 +1,66 @@
+<%- include('partials/header') %>
+
+<div class="cart-container">
+    <h2>Your Shopping Cart</h2>
+    
+    <% if (cartItems.length === 0) { %>
+        <div class="empty-cart">
+            <p>Your cart is currently empty.</p>
+            <a href="/" class="btn btn-primary">Continue Shopping</a>
+        </div>
+    <% } else { %>
+        <div class="cart-content">
+            <div class="cart-items">
+                <% cartItems.forEach(item => { %>
+                    <div class="cart-item">
+                        <div class="cart-item-image" style="background-image: url('<%= item.image %>')"></div>
+                        <div class="cart-item-details">
+                            <h3><%= item.name %></h3>
+                            <p class="cart-item-price">$<%= item.price.toFixed(2) %></p>
+                            <p class="cart-item-qty">Qty: <%= item.quantity %></p>
+                        </div>
+                        <div class="cart-item-total">
+                            $<%= (item.price * item.quantity).toFixed(2) %>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+            
+            <div class="cart-summary">
+                <h3>Order Summary</h3>
+                <div class="summary-row">
+                    <span>Subtotal</span>
+                    <span>$<%= total.toFixed(2) %></span>
+                </div>
+                <div class="summary-row">
+                    <span>Shipping</span>
+                    <span>Free</span>
+                </div>
+                <div class="summary-row total-row">
+                    <span>Total</span>
+                    <span>$<%= total.toFixed(2) %></span>
+                </div>
+                
+                <% if (typeof user !== 'undefined' && user) { %>
+                    <form action="/checkout" method="POST" class="checkout-form">
+                        <h4>Shipping Details</h4>
+                        <input type="text" name="fullName" placeholder="Full Name" required>
+                        <input type="email" name="email" placeholder="Email Address" required>
+                        <textarea name="address" placeholder="Shipping Address" required></textarea>
+                        
+                        <button type="submit" class="btn btn-success btn-large checkout-btn">Complete Order</button>
+                    </form>
+                <% } else { %>
+                    <div class="checkout-login-prompt" style="margin-top: 2rem; padding: 1.5rem; background-color: var(--surface); border-radius: 8px; border: 1px solid var(--border); text-align: center;">
+                        <h4 style="margin-bottom: 1rem;">Log in to Checkout</h4>
+                        <p style="margin-bottom: 1.5rem;">You must be logged in to place an order.</p>
+                        <a href="/login" class="btn btn-primary" style="width: 100%; margin-bottom: 0.5rem;">Log In</a>
+                        <a href="/register" class="btn" style="width: 100%; background-color: var(--border); color: var(--text-main);">Register</a>
+                    </div>
+                <% } %>
+            </div>
+        </div>
+    <% } %>
+</div>
+
+<%- include('partials/footer') %>

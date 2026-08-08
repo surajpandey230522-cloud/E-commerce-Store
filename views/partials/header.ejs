@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="navbar">
+        <div class="container nav-content">
+            <a href="/" class="logo">TaskStore</a>
+            <nav class="nav-links">
+                <a href="/">Products</a>
+                <a href="/cart" class="cart-link">
+                    Cart <span class="cart-badge"><%= cartItemCount %></span>
+                </a>
+                <% if (typeof user !== 'undefined' && user) { %>
+                    <span style="color: var(--text-muted); margin-left: 1rem;">Hello, <%= user.username %>!</span>
+                    <a href="/logout" class="btn btn-primary" style="padding: 0.25rem 0.75rem;">Logout</a>
+                <% } else { %>
+                    <a href="/login" style="margin-left: 1rem;">Login</a>
+                    <a href="/register" class="btn btn-primary" style="padding: 0.25rem 0.75rem;">Register</a>
+                <% } %>
+            </nav>
+        </div>
+    </header>
+    <main class="container main-content">

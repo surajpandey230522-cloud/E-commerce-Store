@@ -1,0 +1,21 @@
+<%- include('partials/header') %>
+
+<section class="hero">
+    <h1>Welcome to TaskStore</h1>
+    <p>Discover our premium selection of tech and office essentials.</p>
+</section>
+
+<section class="product-grid">
+    <% products.forEach(product => { %>
+        <div class="product-card">
+            <div class="product-image" style="background-image: url('<%= product.image %>')"></div>
+            <div class="product-info">
+                <h3><%= product.name %></h3>
+                <p class="price">$<%= product.price.toFixed(2) %></p>
+                <a href="/product/<%= product.id %>" class="btn btn-primary">View Details</a>
+            </div>
+        </div>
+    <% }) %>
+</section>
+
+<%- include('partials/footer') %>
