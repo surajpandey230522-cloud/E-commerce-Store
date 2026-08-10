@@ -246,4 +246,4 @@ Use **Nginx** as a reverse proxy to forward port 80/443 to your Express app on p
 
 ## 📄 License
 
-MIT © 2024 TaskStore
+MIT © 2026 TaskStore
